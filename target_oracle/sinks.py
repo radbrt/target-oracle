@@ -506,8 +506,13 @@ class OracleSink(SQLSink):
         insert_records = []
         for record in records:
             insert_record = {}
-            for column in columns:
-                insert_record[column.name] = record.get(column.name)
+            # for column in columns:
+            #     conformed_colname = self.conform_name(column.name)
+            #     insert_record[conformed_colname] = record.get(conformed_colname)
+
+            for key in record.keys():
+                conformed_key = self.conform_name(key)
+                insert_record[conformed_key] = record.get(key)
             insert_records.append(insert_record)
 
         self.connection.execute(insert_sql, insert_records)
