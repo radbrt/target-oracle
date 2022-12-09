@@ -13,6 +13,8 @@ from target_oracle.tests.samples.sample_tap_countries.countries_tap import (
     SampleTapCountries,
 )
 
+from sqlalchemy import create_engine
+import sqlalchemy
 
 @pytest.fixture()
 def oracle_config():
@@ -25,6 +27,14 @@ def oracle_config():
         "database": "XE",
     }
 
+oracle_config_dict = {
+        "schema": "SYSTEM",
+        "user": "SYSTEM",
+        "password": "P@55w0rd",
+        "host": "localhost",
+        "port": "1521",
+        "database": "XE",
+    }
 
 @pytest.fixture
 def oracle_target(oracle_config) -> TargetOracle:
@@ -49,6 +59,39 @@ def singer_file_to_target(file_name, target) -> None:
                 # and print adds another line ending so we need to remove one.
     buf.seek(0)
     target.listen(buf)
+
+def get_engine():
+    config = oracle_config_dict
+
+    connection_url = sqlalchemy.engine.url.URL.create(
+            drivername="oracle+cx_oracle",
+            username=config["user"],
+            password=config["password"],
+            host=config["host"],
+            port=config["port"],
+            database=config["database"],
+        )
+
+    engine = create_engine(connection_url)
+    return engine
+
+def get_row_count(table_name):
+    engine = get_engine()
+    rowcount = engine.execute(f"SELECT COUNT(*) FROM {table_name}").fetchone()[0]
+    return rowcount
+
+
+def get_table_cols(table_name):
+    engine = get_engine()
+
+    q = f"""
+    SELECT COLUMN_NAME FROM sys.ALL_TAB_COLS
+    WHERE owner='SYSTEM'
+    AND TABLE_NAME='{table_name}'
+    """
+    columns = [ col[0] for col in engine.execute(q).fetchall()]
+    return columns
+
 
 
 # TODO should set schemas for each tap individually so we don't collide
@@ -102,6 +145,9 @@ def test_record_missing_required_property(oracle_target):
 def test_column_camel_case(oracle_target):
     file_name = "camelcase.singer"
     singer_file_to_target(file_name, oracle_target)
+
+    assert get_row_count("TEST_CAMELCASE") == 2
+    assert "CUSTOMER_ID_NUMBER" in get_table_cols("TEST_CAMELCASE")
 
 
 # TODO test that data is correctly set

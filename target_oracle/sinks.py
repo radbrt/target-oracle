@@ -4,12 +4,14 @@ from __future__ import annotations
 
 from singer_sdk.sinks import SQLSink
 from singer_sdk.connectors import SQLConnector
+from singer_sdk.helpers._conformers import replace_leading_digit
 import sqlalchemy
 from typing import Any, Dict, Iterable, List, Optional, cast
 from sqlalchemy.dialects import oracle
 from singer_sdk.helpers._typing import get_datelike_property_type
 from sqlalchemy.schema import PrimaryKeyConstraint
 from sqlalchemy import Column
+import re
 
 class OracleConnector(SQLConnector):
     """The connector for Oracle.
@@ -549,3 +551,27 @@ class OracleSink(SQLSink):
                 )
             )
         return columns
+
+    def snakecase(self, name):
+        name = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
+        name = re.sub('([a-z0-9])([A-Z])', r'\1_\2', name)
+        return name.lower()
+
+
+    def conform_name(self, name: str, object_type: Optional[str] = None) -> str:
+        """Conform a stream property name to one suitable for the target system.
+        Transforms names to snake case by default, applicable to most common DBMSs'.
+        Developers may override this method to apply custom transformations
+        to database/schema/table/column names.
+        Args:
+            name: Property name.
+            object_type: One of ``database``, ``schema``, ``table`` or ``column``.
+        Returns:
+            The name transformed to snake case.
+        """
+        # strip non-alphanumeric characters, keeping - . _ and spaces
+        name = re.sub(r"[^a-zA-Z0-9_\-\.\s]", "", name)
+        # convert to snakecase
+        name = self.snakecase(name)
+        # replace leading digit
+        return replace_leading_digit(name)

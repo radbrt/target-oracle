@@ -1,3 +1,3 @@
-{"type": "SCHEMA", "stream": "TestCamelcase", "schema": {"type": "object", "properties": { "Id": {"type": "string"}, "clientName": {"type": "string"} }}, "key_properties": ["Id"]}
-{"type": "RECORD", "stream": "TestCamelcase", "record": {"Id": "1", "clientName": "Gitter Windows Desktop App"}}
-{"type": "RECORD", "stream": "TestCamelcase", "record": {"Id": "2", "clientName": "Gitter iOS App"}}
+{"type": "SCHEMA", "stream": "TESTCamelcase", "schema": {"type": "object", "properties": { "CustomerIDNumber": {"type": "string"}, "ClientNameTEXT": {"type": "string"} }}, "key_properties": ["CustomerIDNumber"]}
+{"type": "RECORD", "stream": "TESTCamelcase", "record": {"CustomerIDNumber": "1", "ClientNameTEXT": "Gitter Windows Desktop App"}}
+{"type": "RECORD", "stream": "TESTCamelcase", "record": {"CustomerIDNumber": "2", "ClientNameTEXT": "Gitter iOS App"}}
