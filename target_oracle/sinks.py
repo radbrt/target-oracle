@@ -13,6 +13,8 @@ from sqlalchemy.schema import PrimaryKeyConstraint
 from sqlalchemy import Column
 import re
 
+from logging import Logger
+
 class OracleConnector(SQLConnector):
     """The connector for Oracle.
 
@@ -77,7 +79,7 @@ class OracleConnector(SQLConnector):
             return cast(sqlalchemy.types.TypeEngine, oracle.VARCHAR(1))
 
         if self._jsonschema_type_check(jsonschema_type, ("object",)):
-            return cast(sqlalchemy.types.TypeEngine, sqlalchemy.types.VARCHAR(2000))
+            return cast(sqlalchemy.types.TypeEngine, sqlalchemy.types.CLOB())
 
         if self._jsonschema_type_check(jsonschema_type, ("array",)):
             return cast(sqlalchemy.types.TypeEngine, sqlalchemy.types.VARCHAR(2000))
@@ -575,3 +577,18 @@ class OracleSink(SQLSink):
         name = self.snakecase(name)
         # replace leading digit
         return replace_leading_digit(name)
+
+    def preprocess_record(self, record: dict, context: dict) -> dict:
+        """Process incoming record and return a modified result.
+        Args:
+            record: Individual record in the stream.
+            context: Stream partition or context dictionary.
+        Returns:
+            A new, processed record.
+        """
+
+        logger = Logger()
+
+        logger.info("got context %s", context)
+        logger.info(f"contect dir {dir(context)}")
+        return record

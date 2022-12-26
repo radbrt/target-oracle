@@ -139,9 +139,6 @@ def test_record_missing_required_property(oracle_target):
         singer_file_to_target(file_name, oracle_target)
 
 
-# TODO test that data is correctly set
-# see target-sqllit/tests/test_target_sqllite.py
-# @pytest.mark.skip(reason="Waiting for SDK to handle this")
 def test_column_camel_case(oracle_target):
     file_name = "camelcase.singer"
     singer_file_to_target(file_name, oracle_target)
@@ -183,7 +180,7 @@ def test_multiple_state_messages(oracle_target):
 
 
 # TODO test that data is correct
-@pytest.mark.skip(reason="TODO")
+#@pytest.mark.skip(reason="TODO")
 def test_relational_data(oracle_target):
     file_name = "user_location_data.singer"
     singer_file_to_target(file_name, oracle_target)
