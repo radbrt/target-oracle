@@ -23,6 +23,7 @@ def oracle_config():
         "host": "localhost",
         "port": "1521",
         "database": "XE",
+        "write_column_comments": True
     }
 
 
@@ -198,4 +199,9 @@ def test_large_int(oracle_target):
 
 def test_db_schema(oracle_target):
     file_name = "target_schema.singer"
+    singer_file_to_target(file_name, oracle_target)
+
+
+def test_column_comments(oracle_target):
+    file_name = "column_comments.singer"
     singer_file_to_target(file_name, oracle_target)

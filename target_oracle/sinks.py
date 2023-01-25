@@ -202,13 +202,18 @@ class OracleConnector(SQLConnector):
 
         for property_name, property_jsonschema in properties.items():
             is_primary_key = property_name in primary_keys
+            if self.config.get("write_column_comments"):
+                column_comment = property_jsonschema.get("description")
+            else:
+                column_comment = None
             columns.append(
                 sqlalchemy.Column(
                     property_name,
-                    self.to_sql_type(property_jsonschema)
+                    self.to_sql_type(property_jsonschema),
+                    comment = column_comment,
                 )
             )
-        
+
         if primary_keys:
             pk_constraint = PrimaryKeyConstraint(*primary_keys, name=f"{table_name}_PK")
             _ = sqlalchemy.Table(table_name, meta, *columns, pk_constraint)

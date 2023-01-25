@@ -2,6 +2,13 @@
 
 `target-oracle` is a Singer target for Oracle.
 
+Known limitations:
+- Does not handle encoded strings
+- Does not handle complex types (objects/arrays)
+- Probably some issues with big integers
+- Some details around high-precision floating point numbers
+
+
 Build with the [Meltano Target SDK](https://sdk.meltano.com).
 
 <!--
