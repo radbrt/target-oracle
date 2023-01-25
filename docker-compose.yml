@@ -1,0 +1,11 @@
+version: '3.8'
+services:
+  db:
+    image: gvenzl/oracle-xe
+    restart: unless-stopped
+    environment:
+      ORACLE_PASSWORD: P@55w0rd
+      APP_USER: scott
+      APP_USER_PASSWORD: tiger
+    ports:
+      - "1521:1521"
