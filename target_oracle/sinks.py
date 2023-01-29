@@ -207,7 +207,7 @@ class OracleConnector(SQLConnector):
 
             self.connection.execute(
                 f"""COMMENT ON COLUMN { str(full_table_name) }.{ str(column_name) } 
-                IS '{ str(property_def.get('description', '')) }' """
+                IS '{ str(property_def.get('description', '')) }'"""
             )
 
         except Exception as e:

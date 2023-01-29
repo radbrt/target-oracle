@@ -8,4 +8,4 @@
 {"type": "SCHEMA", "stream": "test_column_comments", "key_properties": ["id"], "schema": {"type": "object", "properties": {"id": {"type": "integer"}, "a1": {"type": "number"}, "a2": {"type": "string"}, "a3": {"type": "boolean"}, "a5": {"type": "string", "maxLength": 164, "description": "Yet another fruit"}, "a6": {"type": "integer", "description": "The final fruit number"}}}}
 {"type": "RECORD", "stream": "test_column_comments", "record": {"id": 5, "a1": 105, "a2": "string5", "a3": false, "a5": "apple", "a6": 985}}
 {"type": "RECORD", "stream": "test_column_comments", "record": {"id": 6, "a1": 106, "a2": "string6", "a3": true, "a5": "banana", "a6": 341}}
-{"type": "STATE", "value": {"test_column_comments": 6}}
+{"type": "STATE", "value": {"test_column_comments": 6}
