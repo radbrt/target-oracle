@@ -1,11 +1,11 @@
 {"type": "SCHEMA", "stream": "test_column_comments", "key_properties": ["id"], "schema": {"type": "object", "properties": {"id": {"type": "integer", "description": "Banana ID"}, "a1": {"type": "number", "description": "number of banana"}, "a2": {"type": "string", "description": "nobody knows"}}}}
 {"type": "RECORD", "stream": "test_column_comments", "record": {"id": 1, "a1": 101, "a2": "string1"}}
-{"type": "SCHEMA", "stream": "test_column_comments", "key_properties": ["id"], "schema": {"type": "object", "properties": {"id": {"type": "integer"}, "a1": {"type": "number"}, "a2": {"type": "string"}, "a3": {"type": "boolean"}}}}
+{"type": "SCHEMA", "stream": "test_column_comments", "key_properties": ["id"], "schema": {"type": "object", "properties": {"id": {"type": "integer"}, "a1": {"type": "number"}, "a2": {"type": "string"}, "a3": {"type": "boolean", "description": "Yay we love fruits"}}}}
 {"type": "RECORD", "stream": "test_column_comments", "record": {"id": 2, "a1": 102, "a2": "string2", "a3": true}}
-{"type": "SCHEMA", "stream": "test_column_comments", "key_properties": ["id"], "schema": {"type": "object", "properties": {"id": {"type": "integer"}, "a1": {"type": "number"}, "a2": {"type": "string"}, "a3": {"type": "boolean"}, "a5": {"type": "string", "maxLength": 64}}}}
+{"type": "SCHEMA", "stream": "test_column_comments", "key_properties": ["id"], "schema": {"type": "object", "properties": {"id": {"type": "integer"}, "a1": {"type": "number"}, "a2": {"type": "string"}, "a3": {"type": "boolean"}, "a5": {"type": "string", "maxLength": 64, "description": "Yet another fruit"}}}}
 {"type": "RECORD", "stream": "test_column_comments", "record": {"id": 3, "a1": 103, "a2": "string3", "a3": false, "a5": "banana"}}
 {"type": "RECORD", "stream": "test_column_comments", "record": {"id": 4, "a1": 104, "a2": "string4", "a3": true, "a5": "orange"}}
-{"type": "SCHEMA", "stream": "test_column_comments", "key_properties": ["id"], "schema": {"type": "object", "properties": {"id": {"type": "integer"}, "a1": {"type": "number"}, "a2": {"type": "string"}, "a3": {"type": "boolean"}, "a5": {"type": "string", "maxLength": 164, "description": "Yet another fruit"}, "a6": {"type": "integer"}}}}
+{"type": "SCHEMA", "stream": "test_column_comments", "key_properties": ["id"], "schema": {"type": "object", "properties": {"id": {"type": "integer"}, "a1": {"type": "number"}, "a2": {"type": "string"}, "a3": {"type": "boolean"}, "a5": {"type": "string", "maxLength": 164, "description": "Yet another fruit"}, "a6": {"type": "integer", "description": "The final fruit number"}}}}
 {"type": "RECORD", "stream": "test_column_comments", "record": {"id": 5, "a1": 105, "a2": "string5", "a3": false, "a5": "apple", "a6": 985}}
 {"type": "RECORD", "stream": "test_column_comments", "record": {"id": 6, "a1": 106, "a2": "string6", "a3": true, "a5": "banana", "a6": 341}}
 {"type": "STATE", "value": {"test_column_comments": 6}}

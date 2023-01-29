@@ -10,6 +10,9 @@ from sqlalchemy.dialects import oracle
 from singer_sdk.helpers._typing import get_datelike_property_type
 from sqlalchemy.schema import PrimaryKeyConstraint
 from sqlalchemy import Column
+import logging
+
+LOGGER = logging.getLogger(__name__)
 
 class OracleConnector(SQLConnector):
     """The connector for Oracle.
@@ -108,11 +111,73 @@ class OracleConnector(SQLConnector):
         return False
 
 
+    def prepare_table(
+        self,
+        full_table_name: str,
+        schema: dict,
+        primary_keys: list[str],
+        partition_keys: list[str] | None = None,
+        as_temp_table: bool = False,
+    ) -> None:
+        """Adapt target table to provided schema if possible.
+        Args:
+            full_table_name: the target table name.
+            schema: the JSON Schema for the table.
+            primary_keys: list of key properties.
+            partition_keys: list of partition keys.
+            as_temp_table: True to create a temp table.
+        """
+        if not self.table_exists(full_table_name=full_table_name):
+            self.create_empty_table(
+                full_table_name=full_table_name,
+                schema=schema,
+                primary_keys=primary_keys,
+                partition_keys=partition_keys,
+                as_temp_table=as_temp_table,
+            )
+            return
+
+        for property_name, property_def in schema["properties"].items():
+            self.prepare_column(
+                full_table_name, property_name, property_def # self.to_sql_type(property_def)
+            )
+
+
+    def prepare_column(
+        self,
+        full_table_name: str,
+        column_name: str,
+        property_def: dict,
+        # sql_type: sqlalchemy.types.TypeEngine,
+    ) -> None:
+        """Adapt target table to provided schema if possible.
+        Args:
+            full_table_name: the target table name.
+            column_name: the target column name.
+            sql_type: the SQLAlchemy type.
+        """
+        sql_type = self.to_sql_type(property_def)
+
+
+        if not self.column_exists(full_table_name, column_name):
+            self._create_empty_column(
+                full_table_name=full_table_name,
+                column_name=column_name,
+                property_def=property_def,
+            )
+            return
+
+        self._adapt_column_type(
+            full_table_name,
+            column_name=column_name,
+            sql_type=sql_type,
+        )
+
     def _create_empty_column(
         self,
         full_table_name: str,
         column_name: str,
-        sql_type: sqlalchemy.types.TypeEngine,
+        property_def: dict,
     ) -> None:
         """Create a new column.
         Args:
@@ -130,7 +195,7 @@ class OracleConnector(SQLConnector):
         create_column_clause = sqlalchemy.schema.CreateColumn(
             sqlalchemy.Column(
                 column_name,
-                sql_type,
+                self.to_sql_type(property_def),
             )
         )
 
@@ -138,6 +203,11 @@ class OracleConnector(SQLConnector):
             self.connection.execute(
                 f"""ALTER TABLE { str(full_table_name) }
                 ADD { str(create_column_clause) } """
+            )
+
+            self.connection.execute(
+                f"""COMMENT ON COLUMN { str(full_table_name) }.{ str(column_name) } 
+                IS '{ str(property_def.get('description', '')) }' """
             )
 
         except Exception as e:
