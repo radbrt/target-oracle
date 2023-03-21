@@ -245,3 +245,8 @@ def test_large_int(oracle_target):
 def test_db_schema(oracle_target):
     file_name = "target_schema.singer"
     singer_file_to_target(file_name, oracle_target)
+
+
+def test_illegal_colnames(oracle_target):
+    file_name = "illegal_colnames.singer"
+    singer_file_to_target(file_name, oracle_target)

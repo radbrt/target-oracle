@@ -552,11 +552,18 @@ class OracleSink(SQLSink):
             )
         return columns
 
+
     def snakecase(self, name):
-        name = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
-        name = re.sub('([a-z0-9])([A-Z])', r'\1_\2', name)
+        name = re.sub("(.)([A-Z][a-z]+)", r"\1_\2", name)
+        name = re.sub("([a-z0-9])([A-Z])", r"\1_\2", name)
         return name.lower()
 
+    def move_leading_underscores(self, text):
+        match = re.match(r'^(_*)(.*)', text)
+        if match:
+            result = match.group(2) + match.group(1)
+            return result
+        return text
 
     def conform_name(self, name: str, object_type: Optional[str] = None) -> str:
         """Conform a stream property name to one suitable for the target system.
@@ -569,9 +576,15 @@ class OracleSink(SQLSink):
         Returns:
             The name transformed to snake case.
         """
-        # strip non-alphanumeric characters, keeping - . _ and spaces
-        name = re.sub(r"[^a-zA-Z0-9_\-\.\s]", "", name)
+        # strip non-alphanumeric characters except _.
+        name = re.sub(r"[^a-zA-Z0-9_]+", "_", name)
+
+        # Move leading underscores to the end of the name
+        name = self.move_leading_underscores(name)
+
         # convert to snakecase
         name = self.snakecase(name)
         # replace leading digit
         return replace_leading_digit(name)
+
+
