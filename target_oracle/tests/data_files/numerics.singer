@@ -1,0 +1,3 @@
+{"type": "SCHEMA", "stream": "TestNumbersTable", "schema": {"type": "object", "properties": { "cid": {"type": "integer"}, "value": {"type": "number"} }}, "key_properties": ["cid"]}
+{"type": "RECORD", "stream": "TestNumbersTable", "record": {"cid": 1, "value": 1001.94593928398394944838238393}}
+{"type": "RECORD", "stream": "TestNumbersTable", "record": {"cid": 2, "value": 99493837283283.39483783838383394}}
