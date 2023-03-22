@@ -55,10 +55,10 @@ class TargetOracle(SQLTarget):
             description="Oracle database",
         ),
         th.Property(
-            "prefer_numeric_over_float",
+            "prefer_float_over_numeric",
             th.BooleanType,
-            description="Use number data type for numbers (otherwise float)",
-            default=True
+            description="Use float data type for numbers (otherwise number type is used)",
+            default=False
         ),
     ).to_dict()
 
