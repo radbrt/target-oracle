@@ -1,0 +1,7 @@
+{"type": "SCHEMA", "stream": "badges2", "schema": {"type": "object", "properties": {"id": {"type": ["integer"]}, "user_id": {"type": ["null", "string"], "maxLength": 64}, "name": {"type": ["null", "string"], "maxLength": 64}, "class": {"type": ["null", "integer"]}, "tag_based": {"type": ["null", "boolean"]}}}, "key_properties": ["id"], "bookmark_properties": ["id"]}
+{"type": "STATE", "value": {"bookmarks": {"badges2": {"last_replication_method": "INCREMENTAL", "replication_key": "id", "version": 1667747583387}}, "currently_syncing": "badges"}}
+{"type": "ACTIVATE_VERSION", "stream": "badges2", "version": 1667747583387}
+{"type": "RECORD", "stream": "badges2", "record": {"class": 2, "id": 1, "name": "e9dd95f26c8b24ab973d3f8f", "tag_based": null, "user_id": "9C"}, "version": 1667747583387, "time_extracted": "2022-11-06T15:13:03.387853Z"}
+{"type": "RECORD", "stream": "badges2", "record": {"class": "2", "id": 2, "name": "984fa1edcd96cc55224124c0", "tag_based": null, "user_id": "40"}, "version": 1667747583387, "time_extracted": "2022-11-06T15:13:03.387853Z"}
+{"type": "RECORD", "stream": "badges2", "record": {"class": "D", "id": 3, "name": "cc3453e38b2371bffcae9aa0", "tag_based": null, "user_id": "33"}, "version": 1667747583387, "time_extracted": "2022-11-06T15:13:03.387853Z"}
+{"type": "STATE", "value": {"bookmarks": {"badges2": {"last_replication_method": "INCREMENTAL", "replication_key": "id", "version": 1667747583387, "replication_key_value": 3}}, "currently_syncing": null}}
