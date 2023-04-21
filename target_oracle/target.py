@@ -58,11 +58,11 @@ class TargetOracle(SQLTarget):
             "prefer_float_over_numeric",
             th.BooleanType,
             description="Use float data type for numbers (otherwise number type is used)",
-            default=False
+            default=False,
         ),
         th.Property(
             "table_prefix", th.StringType, description="Prefix to add to table name"
-        )
+        ),
     ).to_dict()
 
     default_sink_class = OracleSink

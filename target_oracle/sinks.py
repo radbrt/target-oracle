@@ -6,12 +6,17 @@ from singer_sdk.sinks import SQLSink
 from singer_sdk.connectors import SQLConnector
 from singer_sdk.helpers._conformers import replace_leading_digit
 import sqlalchemy
-from typing import Any, Dict, Iterable, List, Optional, cast
+from typing import Any, Dict, Iterable, List, Optional, cast, TYPE_CHECKING
 from sqlalchemy.dialects import oracle
 from singer_sdk.helpers._typing import get_datelike_property_type
 from sqlalchemy.schema import PrimaryKeyConstraint
 from sqlalchemy import Column
 import re
+
+
+if TYPE_CHECKING:
+    from singer_sdk.plugin_base import PluginBase
+
 
 class OracleConnector(SQLConnector):
     """The connector for Oracle.
@@ -71,12 +76,12 @@ class OracleConnector(SQLConnector):
 
         if self._jsonschema_type_check(jsonschema_type, ("integer",)):
             return cast(sqlalchemy.types.TypeEngine, sqlalchemy.types.INTEGER())
-        
+
         if self._jsonschema_type_check(jsonschema_type, ("number",)):
             if self.config.get("prefer_float_over_numeric", False):
                 return cast(sqlalchemy.types.TypeEngine, sqlalchemy.types.FLOAT())
             return cast(sqlalchemy.types.TypeEngine, sqlalchemy.types.NUMERIC(38, 10))
-        
+
         if self._jsonschema_type_check(jsonschema_type, ("boolean",)):
             return cast(sqlalchemy.types.TypeEngine, oracle.VARCHAR(1))
 
@@ -87,7 +92,6 @@ class OracleConnector(SQLConnector):
             return cast(sqlalchemy.types.TypeEngine, sqlalchemy.types.VARCHAR(2000))
 
         return cast(sqlalchemy.types.TypeEngine, sqlalchemy.types.VARCHAR(2000))
-
 
     def _jsonschema_type_check(
         self, jsonschema_type: dict, type_check: tuple[str]
@@ -112,7 +116,6 @@ class OracleConnector(SQLConnector):
             return True
 
         return False
-
 
     def _create_empty_column(
         self,
@@ -156,12 +159,10 @@ class OracleConnector(SQLConnector):
         """Temp table from another table."""
 
         try:
-            self.connection.execute(
-                f"""DROP TABLE {temp_table_name}"""
-            )
+            self.connection.execute(f"""DROP TABLE {temp_table_name}""")
         except Exception as e:
-            pass
-        
+            self.logger.debug(f"Could not drop temp table {temp_table_name}. {e}")
+
         ddl = f"""
             CREATE TABLE {temp_table_name} AS (
                 SELECT * FROM {from_table_name}
@@ -207,14 +208,11 @@ class OracleConnector(SQLConnector):
             )
 
         for property_name, property_jsonschema in properties.items():
-            is_primary_key = property_name in primary_keys
+            # is_primary_key = property_name in primary_keys
             columns.append(
-                sqlalchemy.Column(
-                    property_name,
-                    self.to_sql_type(property_jsonschema)
-                )
+                sqlalchemy.Column(property_name, self.to_sql_type(property_jsonschema))
             )
-        
+
         if primary_keys:
             pk_constraint = PrimaryKeyConstraint(*primary_keys, name=f"{table_name}_PK")
             _ = sqlalchemy.Table(table_name, meta, *columns, pk_constraint)
@@ -222,7 +220,6 @@ class OracleConnector(SQLConnector):
             _ = sqlalchemy.Table(table_name, meta, *columns)
 
         meta.create_all(self._engine)
-
 
     def merge_sql_types(  # noqa
         self, sql_types: list[sqlalchemy.types.TypeEngine]
@@ -301,7 +298,6 @@ class OracleConnector(SQLConnector):
             f"Unable to merge sql types: {', '.join([str(t) for t in sql_types])}"
         )
 
-
     def _adapt_column_type(
         self,
         full_table_name: str,
@@ -359,6 +355,18 @@ class OracleSink(SQLSink):
     version_column_name = "x_sdc_table_version"
     connector_class = OracleConnector
 
+    def __init__(
+        self,
+        target: PluginBase,
+        stream_name: str,
+        schema: dict,
+        key_properties: list[str] | None,
+        connector: SQLConnector | None = None,
+    ) -> None:
+        super().__init__(target, stream_name, schema, key_properties)
+        if self._config.get("table_prefix"):
+            self.stream_name = self._config.get("table_prefix") + stream_name
+
     @property
     def schema_name(self) -> Optional[str]:
         """Return the schema name or `None` if using names with no schema part.
@@ -367,7 +375,6 @@ class OracleSink(SQLSink):
         """
         # Look for a default_target_scheme in the configuraion fle
         default_target_schema: str = self.config.get("default_target_schema", None)
-        parts = self.stream_name.split("-")
 
         # 1) When default_target_scheme is in the configuration use it
         # 2) if the streams are in <schema>-<table> format use the
@@ -397,7 +404,6 @@ class OracleSink(SQLSink):
         join_keys = [self.conform_name(key, "column") for key in self.key_properties]
         schema = self.conform_schema(self.schema)
 
-
         if self.key_properties:
             self.logger.info(f"Preparing table {self.full_table_name}")
             self.connector.prepare_table(
@@ -412,10 +418,8 @@ class OracleSink(SQLSink):
             # Create a temp table (Creates from the table above)
             self.logger.info(f"Creating temp table {self.full_table_name}")
             self.connector.create_temp_table_from_table(
-                from_table_name=self.full_table_name,
-                temp_table_name=tmp_table_name
+                from_table_name=self.full_table_name, temp_table_name=tmp_table_name
             )
-
 
             # Insert into temp table
             self.bulk_insert_records(
@@ -539,7 +543,6 @@ class OracleSink(SQLSink):
 
         return None  # Unknown record count.
 
-
     def column_representation(
         self,
         schema: dict,
@@ -556,14 +559,13 @@ class OracleSink(SQLSink):
             )
         return columns
 
-
     def snakecase(self, name):
         name = re.sub("(.)([A-Z][a-z]+)", r"\1_\2", name)
         name = re.sub("([a-z0-9])([A-Z])", r"\1_\2", name)
         return name.lower()
 
     def move_leading_underscores(self, text):
-        match = re.match(r'^(_*)(.*)', text)
+        match = re.match(r"^(_*)(.*)", text)
         if match:
             result = match.group(2) + match.group(1)
             return result
@@ -590,5 +592,3 @@ class OracleSink(SQLSink):
         name = self.snakecase(name)
         # replace leading digit
         return replace_leading_digit(name)
-
-

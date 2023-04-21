@@ -16,6 +16,7 @@ from target_oracle.tests.samples.sample_tap_countries.countries_tap import (
 from sqlalchemy import create_engine
 import sqlalchemy
 
+
 @pytest.fixture()
 def oracle_config():
     return {
@@ -25,17 +26,19 @@ def oracle_config():
         "host": "localhost",
         "port": "1521",
         "database": "XE",
-        "prefer_float_over_numeric": False
+        "prefer_float_over_numeric": False,
     }
 
+
 oracle_config_dict = {
-        "schema": "SYSTEM",
-        "user": "SYSTEM",
-        "password": "P@55w0rd",
-        "host": "localhost",
-        "port": "1521",
-        "database": "XE",
-    }
+    "schema": "SYSTEM",
+    "user": "SYSTEM",
+    "password": "P@55w0rd",
+    "host": "localhost",
+    "port": "1521",
+    "database": "XE",
+}
+
 
 @pytest.fixture
 def oracle_target(oracle_config) -> TargetOracle:
@@ -61,20 +64,22 @@ def singer_file_to_target(file_name, target) -> None:
     buf.seek(0)
     target.listen(buf)
 
+
 def get_engine():
     config = oracle_config_dict
 
     connection_url = sqlalchemy.engine.url.URL.create(
-            drivername="oracle+cx_oracle",
-            username=config["user"],
-            password=config["password"],
-            host=config["host"],
-            port=config["port"],
-            database=config["database"],
-        )
+        drivername="oracle+cx_oracle",
+        username=config["user"],
+        password=config["password"],
+        host=config["host"],
+        port=config["port"],
+        database=config["database"],
+    )
 
     engine = create_engine(connection_url)
     return engine
+
 
 def get_row_count(table_name):
     engine = get_engine()
@@ -90,9 +95,8 @@ def get_table_cols(table_name):
     WHERE owner='SYSTEM'
     AND TABLE_NAME='{table_name}'
     """
-    columns = [ col[0] for col in engine.execute(q).fetchall()]
+    columns = [col[0] for col in engine.execute(q).fetchall()]
     return columns
-
 
 
 # TODO should set schemas for each tap individually so we don't collide
@@ -104,6 +108,7 @@ def test_countries_to_oracle(oracle_config):
     tap = SampleTapCountries(config={}, state=None)
     target = TargetOracle(config=oracle_config)
     sync_end_to_end(tap, target)
+
 
 @pytest.mark.skip("SQLalchemy and object column types don't work well together")
 def test_aapl_to_oracle(oracle_config):
@@ -220,6 +225,7 @@ def test_encoded_string_data(oracle_target):
     file_name = "encoded_strings.singer"
     singer_file_to_target(file_name, oracle_target)
 
+
 @pytest.mark.skip(reason="Something about objects not supported")
 def test_tap_appl(oracle_target):
     file_name = "tap_aapl.singer"
@@ -251,6 +257,7 @@ def test_db_schema(oracle_target):
 def test_illegal_colnames(oracle_target):
     file_name = "illegal_colnames.singer"
     singer_file_to_target(file_name, oracle_target)
+
 
 def test_numerics(oracle_target):
     file_name = "numerics.singer"
