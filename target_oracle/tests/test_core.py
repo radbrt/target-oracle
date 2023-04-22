@@ -27,7 +27,7 @@ def oracle_config():
         "port": "1521",
         "database": "XE",
         "prefer_float_over_numeric": False,
-    }
+    }  # nosec
 
 
 oracle_config_dict = {
@@ -37,7 +37,7 @@ oracle_config_dict = {
     "host": "localhost",
     "port": "1521",
     "database": "XE",
-}
+}  # nosec
 
 
 @pytest.fixture
@@ -83,8 +83,9 @@ def get_engine():
 
 def get_row_count(table_name):
     engine = get_engine()
-    rowcount = engine.execute(f"SELECT COUNT(*) FROM {table_name}").fetchone()[0]
-    return rowcount
+    rowcount = engine.execute(f"SELECT COUNT(*) FROM {table_name}")  # nosec
+
+    return rowcount.fetchone()[0]
 
 
 def get_table_cols(table_name):
@@ -94,7 +95,7 @@ def get_table_cols(table_name):
     SELECT COLUMN_NAME FROM sys.ALL_TAB_COLS
     WHERE owner='SYSTEM'
     AND TABLE_NAME='{table_name}'
-    """
+    """  # nosec
     columns = [col[0] for col in engine.execute(q).fetchall()]
     return columns
 

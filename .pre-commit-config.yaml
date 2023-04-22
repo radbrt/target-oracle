@@ -21,3 +21,9 @@ repos:
     - id: flake8
       language_version: python3.9
       args: [--max-line-length=120, --ignore=E501 W503]
+  - repo: https://github.com/Lucas-C/pre-commit-hooks-bandit
+    rev: v1.0.6
+    hooks:
+    - id: python-bandit-vulnerability-check
+      args: [--verbose,  -ll, --skip, "B321,B402", --recursive, ./target_oracle]
+      files: .py$

@@ -168,7 +168,7 @@ class OracleConnector(SQLConnector):
                 SELECT * FROM {from_table_name}
                 WHERE 1=0
             )
-        """
+        """  # nosec
 
         self.connection.execute(ddl)
 
@@ -488,7 +488,7 @@ class OracleSink(SQLSink):
             WHEN NOT MATCHED THEN
                 INSERT ({", ".join(schema["properties"].keys())})
                 VALUES ({", ".join([f"temp.{key}" for key in schema["properties"].keys()])})
-        """
+        """  # nosec
 
         self.connection.execute(merge_sql)
 
