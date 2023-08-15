@@ -1,23 +1,29 @@
 version: 1
 send_anonymous_usage_stats: true
-project_id: "target-oracle"
+project_id: target-oracle
 default_environment: test
 environments:
 - name: test
 plugins:
-  extractors: []
+  extractors:
+  - name: tap-csv
+    variant: meltanolabs
+    pip_url: git+https://github.com/MeltanoLabs/tap-csv.git
+    config:
+      files:
+        - entity: demo
+          path: input/demo.csv
+          keys: [name]
+          encoding: utf-8
   loaders:
-  - name: "target-oracle"
-    namespace: "target_oracle"
+  - name: target-oracle
+    namespace: target_oracle
     pip_url: -e .
     capabilities:
     - about
     - stream-maps
     - record-flattening
-    config:
-      start_date: '2010-01-01T00:00:00Z'
     settings:
-    # TODO: To configure using Meltano, declare settings and their types here:
     - name: sqlalchemy_url
       kind: password
     - name: username
@@ -28,3 +34,11 @@ plugins:
     - name: database
     - name: start_date
       value: '2010-01-01T00:00:00Z'
+    config:
+      start_date: '2010-01-01T00:00:00Z'
+      user: oracle
+      password: oracle
+      host: localhost
+      port: "1521"
+      database: XE
+      schema: SYSTEM

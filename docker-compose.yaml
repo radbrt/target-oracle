@@ -1,0 +1,13 @@
+version: '3.7'
+
+services:
+  oracle:
+    image: gvenzl/oracle-xe
+    ports:
+      - "1521:1521"
+    environment:
+      - ORACLE_ALLOW_REMOTE=true
+      - ORACLE_DISABLE_ASYNCH_IO=true
+      - ORACLE_ENABLE_XDB=true
+      - ORACLE_PASSWORD=oracle
+      - ORACLE_USER=oracle
