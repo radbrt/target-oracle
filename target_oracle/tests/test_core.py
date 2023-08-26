@@ -25,7 +25,8 @@ def oracle_config():
         "host": "localhost",
         "port": "1521",
         "database": "XE",
-        "prefer_float_over_numeric": False
+        "prefer_float_over_numeric": False,
+        "freeze_schema": True
     }
 
 oracle_config_dict = {
@@ -251,6 +252,7 @@ def test_db_schema(oracle_target):
 def test_illegal_colnames(oracle_target):
     file_name = "illegal_colnames.singer"
     singer_file_to_target(file_name, oracle_target)
+
 
 def test_numerics(oracle_target):
     file_name = "numerics.singer"
