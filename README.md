@@ -4,39 +4,25 @@
 
 Build with the [Meltano Target SDK](https://sdk.meltano.com).
 
-<!--
+git 
+## Settings
 
-Developer TODO: Update the below as needed to correctly describe the install procedure. For instance, if you do not have a PyPi repo, or if you want users to directly install from your git repo, you can modify this step as appropriate.
+| Setting                  | Required | Default | Description |
+|:-------------------------|:--------:|:-------:|:------------|
+| sqlalchemy_url           | False    | None    | SQLAlchemy connection string |
+| driver_name              | False    | oracle+cx_oracle | SQLAlchemy driver name |
+| username                 | False    | None    | Oracle username |
+| password                 | False    | None    | Oracle password |
+| host                     | False    | None    | Oracle host |
+| port                     | False    | None    | Oracle port |
+| database                 | False    | None    | Oracle database |
+| prefer_float_over_numeric| False    |       0 | Use float data type for numbers (otherwise number type is used) |
+| freeze_schema            | False    |       0 | Do not alter types of existing columns |
+| stream_maps              | False    | None    | Config object for stream maps capability. For more information check out [Stream Maps](https://sdk.meltano.com/en/latest/stream_maps.html). |
+| stream_map_config        | False    | None    | User-defined config values to be used within map expressions. |
+| flattening_enabled       | False    | None    | 'True' to enable schema flattening and automatically expand nested properties. |
+| flattening_max_depth     | False    | None    | The max depth to flatten schemas. |
 
-## Installation
-
-Install from PyPi:
-
-```bash
-pipx install target-oracle
-```
-
-Install from GitHub:
-
-```bash
-pipx install git+https://github.com/ORG_NAME/target-oracle.git@main
-```
-
--->
-
-## Configuration
-
-### Accepted Config Options
-
-<!--
-Developer TODO: Provide a list of config options accepted by the target.
-
-This section can be created by copy-pasting the CLI output from:
-
-```
-target-oracle --about --format=markdown
-```
--->
 
 A full list of supported settings and capabilities for this
 target is available by running:

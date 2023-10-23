@@ -60,6 +60,12 @@ class TargetOracle(SQLTarget):
             description="Use float data type for numbers (otherwise number type is used)",
             default=False
         ),
+        th.Property(
+            "freeze_schema",
+            th.BooleanType,
+            description="Do not alter types of existing columns",
+            default=False
+        )
     ).to_dict()
 
     default_sink_class = OracleSink
