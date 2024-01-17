@@ -61,6 +61,12 @@ class TargetOracle(SQLTarget):
             default=False
         ),
         th.Property(
+            "strings_as_clobs",
+            th.BooleanType,
+            description="Write all strings as clob data type",
+            default=False
+        ),
+        th.Property(
             "freeze_schema",
             th.BooleanType,
             description="Do not alter types of existing columns",

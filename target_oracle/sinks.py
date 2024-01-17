@@ -95,6 +95,8 @@ class OracleConnector(SQLConnector):
                     return cast(sqlalchemy.types.TypeEngine, sqlalchemy.types.DATE())
 
             maxlength = jsonschema_type.get("maxLength", 4000)
+            if maxlength>4000 or self.config.get("strings_as_clobs", False):
+                return cast(sqlalchemy.types.TypeEngine, sqlalchemy.types.CLOB())
             return cast(
                 sqlalchemy.types.TypeEngine, sqlalchemy.types.VARCHAR(maxlength)
             )
