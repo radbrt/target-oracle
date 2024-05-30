@@ -1,0 +1,5 @@
+{"type": "SCHEMA", "stream": "test_clob", "key_properties": ["id"], "schema": {"type": "object", "properties": {"id": {"type": "integer"}, "name": {"type": "string", "maxLength": 4500}}}}
+{"type": "RECORD", "stream": "test_clob", "record": {"id": 1, "name": "Yannis"}}
+{"type": "RECORD", "stream": "test_clob", "record": {"id": 2, "name": "Micael"}}
+{"type": "RECORD", "stream": "test_clob", "record": {"id": 3, "name": "Jacob"}}
+{"type": "RECORD", "stream": "test_clob", "record": {"id": 4, "name": "Josh"}}
