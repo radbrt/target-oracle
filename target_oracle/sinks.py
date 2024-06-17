@@ -42,6 +42,7 @@ class OracleConnector(SQLConnector):
             host=config["host"],
             port=config["port"],
             database=config["database"],
+            schema = config["schema"] or config["user"]
         )
         return connection_url
 

@@ -65,6 +65,12 @@ class TargetOracle(SQLTarget):
             th.BooleanType,
             description="Do not alter types of existing columns",
             default=False
+        ),
+        th.Property(
+            "schema",
+            th.StringType,
+            description="Target database schema for the data",
+            default=None
         )
     ).to_dict()
 

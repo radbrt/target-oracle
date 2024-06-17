@@ -30,7 +30,6 @@ def oracle_config():
     }
 
 oracle_config_dict = {
-        "schema": "SYSTEM",
         "user": "SYSTEM",
         "password": "P@55w0rd",
         "host": "localhost",
@@ -72,6 +71,7 @@ def get_engine():
             host=config["host"],
             port=config["port"],
             database=config["database"],
+            schema = config["schema"] or config["user"]
         )
 
     engine = create_engine(connection_url)
