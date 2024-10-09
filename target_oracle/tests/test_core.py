@@ -257,3 +257,8 @@ def test_illegal_colnames(oracle_target):
 def test_numerics(oracle_target):
     file_name = "numerics.singer"
     singer_file_to_target(file_name, oracle_target)
+
+
+def test_decimals(oracle_target):
+    file_name = "decimal_types.singer"
+    singer_file_to_target(file_name, oracle_target)
