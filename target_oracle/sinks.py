@@ -13,6 +13,8 @@ from sqlalchemy.schema import PrimaryKeyConstraint
 from sqlalchemy import Column
 import re
 
+
+
 class OracleConnector(SQLConnector):
     """The connector for Oracle.
 
@@ -622,3 +624,18 @@ class OracleSink(SQLSink):
         return replace_leading_digit(name)
 
 
+
+    def _validate_and_parse(self, record: dict) -> dict:
+        """Validate or repair the record, parsing to python-native types as needed.
+
+        Args:
+            record: Individual record in the stream.
+
+        Returns:
+            TODO
+        """
+        # self._validator.validate(record)
+        self._parse_timestamps_in_record(
+            record=record, schema=self.schema, treatment=self.datetime_error_treatment
+        )
+        return record

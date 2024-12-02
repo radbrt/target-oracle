@@ -25,7 +25,7 @@ def oracle_config():
         "host": "localhost",
         "port": "1521",
         "database": "XE",
-        "prefer_float_over_numeric": False,
+        "prefer_float_over_numeric": True,
         "freeze_schema": True
     }
 

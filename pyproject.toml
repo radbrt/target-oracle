@@ -10,9 +10,9 @@ keywords = [
 license = "Apache 2.0"
 
 [tool.poetry.dependencies]
-python = "<3.11,>=3.7.1"
+python = "<3.13,>=3.7.1"
 requests = "^2.25.1"
-singer-sdk = "^0.13.0"
+singer-sdk = "^0.19.0"
 cx-Oracle = "^8.3.0"
 
 [tool.poetry.dev-dependencies]
