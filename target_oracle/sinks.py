@@ -36,7 +36,8 @@ class OracleConnector(SQLConnector):
             return config["sqlalchemy_url"]
 
         connection_url = sqlalchemy.engine.url.URL.create(
-            drivername="oracle+cx_oracle",
+            # drivername="cx_oracle",
+            drivername=config["driver_name"],
             username=config["user"],
             password=config["password"],
             host=config["host"],
@@ -84,6 +85,12 @@ class OracleConnector(SQLConnector):
         """
         if self._jsonschema_type_check(jsonschema_type, ("string",)):
             datelike_type = get_datelike_property_type(jsonschema_type)
+            # Universal detection of CLOB fields
+            if jsonschema_type.get("maxLength", 0) > 4000 or jsonschema_type.get("format", "").lower() == "clob":
+                return cast(sqlalchemy.types.TypeEngine, sqlalchemy.types.CLOB())
+            if datelike_type == "clob":
+                return cast(sqlalchemy.types.TypeEngine, sqlalchemy.types.CLOB())
+
             if datelike_type:
                 if datelike_type == "date-time":
                     return cast(
@@ -101,6 +108,10 @@ class OracleConnector(SQLConnector):
 
         if self._jsonschema_type_check(jsonschema_type, ("integer",)):
             return cast(sqlalchemy.types.TypeEngine, sqlalchemy.types.INTEGER())
+
+        # Detect and convert CLOB fields
+        if self._jsonschema_type_check(jsonschema_type, ("clob",)):
+           return cast(sqlalchemy.types.TypeEngine, sqlalchemy.types.CLOB())
         
         if self._jsonschema_type_check(jsonschema_type, ("number",)):
             if self.config.get("prefer_float_over_numeric", False):
